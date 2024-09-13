@@ -7,6 +7,36 @@
         <title>OnBoarding</title>
     </head>
     <body>
-    Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+        @@if ()
+            
+        @endif
+
+        @@if ()
+            
+        @else
+            
+        @endif
+
+        @@@switch($type)
+            @case(1)
+                
+                @break
+            @case(2)
+                
+                @break
+            @default
+                
+        @endswitch
+
+        @@for ($i = 0; $i < $count; $i++)
+            
+        @endfor
+
+        @@@foreach ($collection as $item)
+            
+        @endforeach
+
+
+
     </body>
 </html>

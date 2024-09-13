@@ -1,0 +1,102 @@
+body{
+    font-family: sans-serif;
+}
+
+h1, h2{
+    text-align: center;
+}
+
+.boton{
+    color: black;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background-color: #45a049;
+}
+
+.boton:active {
+    background-color: #3e8e41;
+}
+
+.boton-crear {
+    background-color: #4CAF50;
+}
+
+.boton-crear:hover {
+    background-color: #45a049;
+}
+
+.boton-borrar {
+    background-color: #f44336;
+}
+
+.boton-borrar:hover {
+    background-color: #da190b;
+}
+
+.boton-modificar {
+    background-color: #2160f3;
+}
+
+.boton-modificar:hover {
+    background-color: #0b7dda;
+}
+
+input{
+    display: inline-block;
+}
+.contenedor{
+    text-align: center;
+    display: block;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 50%;
+}
+
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}  
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+form{
+    margin: 5px;
+}
+
+.input-form{
+    padding: 10px;
+    width: 25%;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
