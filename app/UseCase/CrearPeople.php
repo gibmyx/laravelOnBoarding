@@ -3,6 +3,7 @@
 namespace App\UseCase;
 
 use App\Repository\PeopleRepository;
+use App\Models\People;
 
 class CrearPeople
 {
@@ -10,7 +11,7 @@ class CrearPeople
     {
     }
 
-    public function execute($data)
+    public function execute($data): People
     {
         return $this->repository->crear($data);
     }

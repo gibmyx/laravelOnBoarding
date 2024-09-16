@@ -11,17 +11,17 @@ class PeopleRepository
         return People::all();
     }
 
-    public function crear($data)
+    public function crear($data): People
     {
         return People::create($data);
     }
 
-    public function buscar($id)
+    public function buscar($id): People
     {
         return People::find($id);
     }
 
-    public function editar($id)
+    public function editar($id): People
     {
         $people = People::find($id);
         $item = request()->all();

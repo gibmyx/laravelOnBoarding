@@ -3,6 +3,7 @@
 namespace App\UseCase;
 
 use App\Repository\PeopleRepository;
+use App\Models\People;
 
 class EditarPeople
 {
@@ -10,7 +11,7 @@ class EditarPeople
     {
     }
 
-    public function execute($id)
+    public function execute($id): People
     {
         return $this->repository->editar($id);
     }

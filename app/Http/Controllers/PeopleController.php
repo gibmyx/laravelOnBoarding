@@ -29,10 +29,8 @@ class PeopleController extends Controller
 
     public function listar()
     {
-
         $useCase = new MostrarPeople();
         $peoples = $useCase->execute();
-        dd($peoples, get_class($peoples));
         
         return view('listar', compact('peoples'));
     }
@@ -57,6 +55,8 @@ class PeopleController extends Controller
     {
         $useCase = new EliminarPeople();
         $useCase->execute($people);
+
+        dd($useCase);
 
         return redirect('/people/listar');
 
