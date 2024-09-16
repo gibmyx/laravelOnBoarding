@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Persona;
+use App\PeopleCase\PeopleCase;
 use Illuminate\Http\Request;
 
 class PersonasController extends Controller
 {
     public function index(){
-
-        //$persona = Persona::find(1);
-        $persona = Persona::all();
-        return view('ListaPersonas', ['persona' => $persona]);
+        $personas = PeopleCase::ListarPeople();
+        return view('ListaPersonas', ['persona' => $personas]);
     }
 
     public function crear(){
