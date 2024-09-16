@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 
 class PersonasController extends Controller
 {
+    private $people;
+    public function __construct()
+    {
+        $this->people = (new PeopleCase());
+    }
+
     public function index(){
-        $personas = PeopleCase::ListarPeople();
+        $personas = $this->people->ListarPeople();
         return view('ListaPersonas', ['persona' => $personas]);
     }
 
@@ -18,25 +24,25 @@ class PersonasController extends Controller
     }
 
     public function guardar(Request $request){
-        PeopleCase::CrearPeople($request);
+        $this->people->CrearPeople($request);
         return redirect('/');
     }
 
-    public function modificar($id){
+    public function modificar(int $id){
         
-        $persona = PeopleCase::BuscarPersona($id);
+        $persona = $this->people->BuscarPersona($id);
 
         return view('ModificarPersona', compact('persona'));
     }
 
     public function guardarModificacion(Request $request, $id){
-        PeopleCase::ModificarPersona($request, $id);
+        $this->people->ModificarPersona($request, $id);
 
         return redirect('/');
     }
     
-    public function eliminar($id){
-        PeopleCase::EliminarPersona($id);
+    public function eliminar(int $id){
+        $this->people->EliminarPersona($id);
         return redirect("/");
     }
 }

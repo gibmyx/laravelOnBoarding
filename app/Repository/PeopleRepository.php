@@ -3,39 +3,34 @@
 namespace App\Repository;
 
 use App\Models\Persona;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class PeopleRepository{
 
-    public static function Listar():Collection{
+    public function Listar():Collection{
         $persona = Persona::all();
         return $persona;
     }
 
-    public static function CrearPersona(Array $validarData):void{
-        $persona = new Persona;
-        $persona->nombre = $validarData['nombre'];
-        $persona->apellido = $validarData['apellido'];
-        $persona->email = $validarData['email'];
-        $persona->descripcion = $validarData['descripcion'];
+    public function CrearPersona(Persona $persona):void{
         $persona->save();
     }
 
-    public static function BuscarPersona($id) /*Retorna objeto */ {
+    public function BuscarPersona(int $id):Persona /*Retorna objeto */ {
         $persona = Persona::find($id);
         return $persona;
     }
 
-    public static function ModificarPersona($validarData, $id){
-        $persona = Persona::find($id);
-        $persona->nombre = $validarData['nombre'];
-        $persona->apellido = $validarData['apellido'];
-        $persona->email = $validarData['email'];
-        $persona->descripcion = $validarData['descripcion'];
-        $persona->save();
+    public function ModificarPersona(Persona $persona, int $id): void{
+        $personaActual = Persona::find($id);
+        $personaActual->nombre = $persona->nombre;
+        $personaActual->apellido = $persona->apellido;
+        $personaActual->email = $persona->email;
+        $personaActual->descripcion = $persona->descripcion;
+        $personaActual->save();
     }
 
-    public static function EliminarPersona($id){
+    public function EliminarPersona(int $id): void{
         $persona = Persona::find($id);
         $persona->delete();
     }

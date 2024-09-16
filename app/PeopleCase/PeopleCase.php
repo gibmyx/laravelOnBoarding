@@ -4,50 +4,51 @@ namespace App\PeopleCase;
 
 use App\Models\Persona;
 use App\Repository\PeopleRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class PeopleCase{
-    public static function ListarPeople(){
-        $personas = PeopleRepository::Listar();
-        return $personas;
+    private $repository;
+
+    public function __construct()
+    {
+        $this->repository = (new PeopleRepository());
     }
 
-    public static function CrearPeople(Request $request){
-        //$persona = new Persona;
+    public function ListarPeople():Collection{
+        $personas = $this->repository->Listar();
+        return $personas; 
+    }
 
-        $validarData = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255'
-        ]);
+    public function CrearPeople(Request $request):void{
+        $persona = new Persona;
 
-        PeopleRepository::CrearPersona($validarData);
-        /*
-        $persona->nombre = $request->nombre->validate([]);
+        $persona->nombre = $request->nombre;
         $persona->apellido = $request->apellido;
         $persona->email = $request->email;
         $persona->descripcion = $request->descripcion;
-        */
+        
+        $this->repository->CrearPersona($persona);
     }
 
-    public static function BuscarPersona($id){
-        $persona = PeopleRepository::BuscarPersona($id);
+    public function BuscarPersona(int $id):Persona{
+        $persona = $this->repository->BuscarPersona($id);
         return $persona;
     }
 
-    public static function ModificarPersona($request, $id){
-        $validarData = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'apellido' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:255'
-        ]);
-        PeopleRepository::ModificarPersona($validarData, $id);
+    public function ModificarPersona(Request $request, int $id):void{
+        $persona = new Persona;
+
+        $persona->nombre = $request->nombre;
+        $persona->apellido = $request->apellido;
+        $persona->email = $request->email;
+        $persona->descripcion = $request->descripcion;
+
+        $this->repository->ModificarPersona($persona, $id);
     }
 
-    public static function EliminarPersona($id){
-        PeopleRepository::EliminarPersona($id);
+    public function EliminarPersona(int $id):void{
+        $this->repository->EliminarPersona($id);
     }
 }
 
