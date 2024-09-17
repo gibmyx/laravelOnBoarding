@@ -12,7 +12,6 @@ use App\UseCase\EliminarPeople;
 
 class PeopleController extends Controller
 {
-
     public function crear()
     {
         return view('crear');
@@ -23,7 +22,6 @@ class PeopleController extends Controller
         $useCase = new CrearPeople();
         $data = request()->all();
         $person = $useCase->execute($data);
-
         return view('success', compact('person'));
     }
 
@@ -31,7 +29,6 @@ class PeopleController extends Controller
     {
         $useCase = new MostrarPeople();
         $peoples = $useCase->execute();
-        
         return view('listar', compact('peoples'));
     }
 
@@ -45,9 +42,7 @@ class PeopleController extends Controller
     public function update($people)
     {
         $useCase = new EditarPeople();
-        
         $useCase->execute($people);
-
         return redirect('/people/listar');
     }
 
@@ -55,11 +50,6 @@ class PeopleController extends Controller
     {
         $useCase = new EliminarPeople();
         $useCase->execute($people);
-
-        dd($useCase);
-
         return redirect('/people/listar');
-
     }
-
 }

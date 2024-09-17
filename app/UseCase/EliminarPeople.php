@@ -10,8 +10,8 @@ class EliminarPeople
     {
     }
 
-    public function execute($id)
+    public function execute(int $id): void
     {
-        return $this->repository->eliminar($id);
+        $this->repository->eliminar($id);
     }
 }

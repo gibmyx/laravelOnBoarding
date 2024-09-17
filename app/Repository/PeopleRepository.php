@@ -11,17 +11,17 @@ class PeopleRepository
         return People::all();
     }
 
-    public function crear($data): People
+    public function crear(array $data): People
     {
         return People::create($data);
     }
 
-    public function buscar($id): People
+    public function buscar(int $id): ?People
     {
         return People::find($id);
     }
 
-    public function editar($id): People
+    public function editar(int $id): ?People
     {
         $people = People::find($id);
         $item = request()->all();
@@ -29,8 +29,8 @@ class PeopleRepository
         return $people;
     }
 
-    public function eliminar($id)
+    public function eliminar(int $id): void
     {
-        return People::destroy($id);
+        People::destroy($id);
     }
 }

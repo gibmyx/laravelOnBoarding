@@ -11,7 +11,7 @@ class CrearPeople
     {
     }
 
-    public function execute($data): People
+    public function execute(array $data): People
     {
         return $this->repository->crear($data);
     }

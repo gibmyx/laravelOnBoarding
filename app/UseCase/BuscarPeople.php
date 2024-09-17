@@ -11,7 +11,7 @@ class BuscarPeople
     {
     }
 
-    public function execute($id): People
+    public function execute(int $id): ?People
     {
         return $this->repository->buscar($id);
     }
