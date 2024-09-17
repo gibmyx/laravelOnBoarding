@@ -37,14 +37,7 @@ class PeopleCase{
     }
 
     public function ModificarPersona(Request $request, int $id):void{
-        $persona = new Persona;
-
-        $persona->nombre = $request->nombre;
-        $persona->apellido = $request->apellido;
-        $persona->email = $request->email;
-        $persona->descripcion = $request->descripcion;
-
-        $this->repository->ModificarPersona($persona, $id);
+        $this->repository->ModificarPersona($request, $id);
     }
 
     public function EliminarPersona(int $id):void{

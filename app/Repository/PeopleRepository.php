@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\Persona;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 class PeopleRepository{
 
@@ -21,12 +22,12 @@ class PeopleRepository{
         return $persona;
     }
 
-    public function ModificarPersona(Persona $persona, int $id): void{
+    public function ModificarPersona(Request $request, int $id): void{
         $personaActual = Persona::find($id);
-        $personaActual->nombre = $persona->nombre;
-        $personaActual->apellido = $persona->apellido;
-        $personaActual->email = $persona->email;
-        $personaActual->descripcion = $persona->descripcion;
+        $personaActual->nombre = $request->nombre;
+        $personaActual->apellido = $request->apellido;
+        $personaActual->email = $request->email;
+        $personaActual->descripcion = $request->descripcion;
         $personaActual->save();
     }
 

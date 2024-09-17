@@ -35,7 +35,7 @@ class PersonasController extends Controller
         return view('ModificarPersona', compact('persona'));
     }
 
-    public function guardarModificacion(Request $request, $id){
+    public function guardarModificacion(Request $request, int $id){
         $this->people->ModificarPersona($request, $id);
 
         return redirect('/');
