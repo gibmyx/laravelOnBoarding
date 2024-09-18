@@ -1,7 +1,5 @@
 <x-app-layout>
-
     <style>
-
         h1 {
             text-align: center;
             font-size: 24px;
@@ -61,5 +59,4 @@
 
         </div>
     </form>
-
 </x-app-layout>

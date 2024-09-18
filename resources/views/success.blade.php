@@ -34,5 +34,4 @@
         <h2>{{ $person->email }}</h2>
         <h2>{{ $person->description }}</h2>
     </div>
-
 </x-app-layout>

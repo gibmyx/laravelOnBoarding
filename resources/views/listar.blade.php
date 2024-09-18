@@ -1,7 +1,5 @@
 <x-app-layout>
-
     <style>
-
         .container{
             display: flex;
             flex-direction: row;
@@ -54,7 +52,6 @@
         }
     </style>
 
-
     <a href="/">Home Page</a>
 
     @foreach($peoples as $people)
@@ -75,5 +72,4 @@
 
         </div>
     @endforeach
-
 </x-app-layout>

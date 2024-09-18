@@ -14,12 +14,10 @@
     </style>
 </head>
 <body>
-
     <header></header>
 
     {{$slot}}
 
     <footer></footer>
-
 </body>
 </html>

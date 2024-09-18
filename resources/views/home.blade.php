@@ -1,6 +1,5 @@
 <x-app-layout>
     <style>
-
         h1 {
 
             text-align: center;
@@ -33,7 +32,6 @@
             height: 50px;
             background-color: rosybrown;
         }
-
     </style>
         <div>
 
@@ -47,5 +45,4 @@
 
             </div>
         </div>
-
 </x-app-layout>

@@ -1,6 +1,5 @@
 <x-app-layout>
     <style>
-
         h1 {
             text-align: center;
             font-size: 24px;
@@ -24,7 +23,6 @@
             color: white;
             background-color: #005cc5;
         }
-
     </style>
 
     <form action="/people/{{$people->id}}" method="post">
@@ -63,6 +61,4 @@
 
         </div>
     </form>
-
-
 </x-app-layout>
