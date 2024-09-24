@@ -8,7 +8,9 @@ use App\UseCase\EstudianteCase\CrearEstudiante;
 use App\UseCase\EstudianteCase\EliminarEstudiante;
 use App\UseCase\EstudianteCase\ListarEstudiantes;
 use App\UseCase\EstudianteCase\ModificarEstudiante;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View as FacadesView;
 use Illuminate\View\View;
 
 class EstudianteController extends Controller
@@ -20,7 +22,7 @@ class EstudianteController extends Controller
         $this->repository = (new EstudianteRepository());
     }
 
-    public function index()
+    public function index():View
     {
         $estudiante = new ListarEstudiantes($this->repository);
         $estudiante = $estudiante->ListarEstudiantes(); 
@@ -32,7 +34,7 @@ class EstudianteController extends Controller
         return view('Estudiante/CrearEstudiante');
     }
 
-    public function guardar(Request $request)
+    public function guardar(Request $request):RedirectResponse
     {
         $estudiante = new DTOEstudiante($request);
         $crearEstudiante = new CrearEstudiante($this->repository);
@@ -40,14 +42,14 @@ class EstudianteController extends Controller
         return redirect('/Estudiantes');
     }
     
-    public function modificar(int $cedula)
+    public function modificar(int $cedula):View
     {
         $modificarEstudiante = new ModificarEstudiante($this->repository);
         $estudiante = $modificarEstudiante->BuscarEstudiante($cedula);
         return view('Estudiante/ModificarEstudiante', ['estudiante' => $estudiante]);
     }
     
-    public function guardarModificacion(int $cedula,Request $request)
+    public function guardarModificacion(int $cedula,Request $request):RedirectResponse
     {
         $estudiante = new DTOEstudiante($request);
         $modificarEstudiante = new ModificarEstudiante($this->repository);
@@ -55,7 +57,7 @@ class EstudianteController extends Controller
         return redirect("/Estudiantes");
     }
     
-    public function eliminar(int $cedula)
+    public function eliminar(int $cedula):RedirectResponse
     {   
         $estudiante = new EliminarEstudiante($this->repository);
         $estudiante->EliminarEstudiante($cedula);
