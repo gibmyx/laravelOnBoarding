@@ -52,7 +52,7 @@
         }
     </style>
 
-    <a href="/">Home Page</a>
+    <a href="/people">Home Page</a>
 
     @foreach($peoples as $people)
         <div class="container">

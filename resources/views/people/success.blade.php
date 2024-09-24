@@ -21,7 +21,7 @@
         }
     </style>
 
-    <a href="/">Home Page</a>
+    <a href="/people">Home Page</a>
 
     <x-alert type="success" class="mt-6">
         <x-slot name="title">

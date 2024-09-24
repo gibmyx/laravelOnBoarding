@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\People;
 use Illuminate\Database\Eloquent\Collection;
+
 class PeopleRepository
 {
     public function mostrar(): Collection
