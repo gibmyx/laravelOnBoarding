@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Persona;
-use App\PeopleCase\PeopleCase;
+use App\UseCase\PeopleCase\PeopleCase;
 use Illuminate\Http\Request;
 
 class PersonasController extends Controller
