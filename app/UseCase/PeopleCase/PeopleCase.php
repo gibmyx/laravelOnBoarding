@@ -1,9 +1,9 @@
 <?php
 
-namespace App\PeopleCase;
+namespace App\UseCase\PeopleCase;
 
 use App\Models\Persona;
-use App\Repository\PeopleRepository;
+use App\Repository\PeopleRepository\PeopleRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
