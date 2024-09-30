@@ -1,6 +1,6 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\People;
 
 use App\Repository\PeopleRepository;
 use Illuminate\Database\Eloquent\Collection;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\People;
 
 use App\Repository\PeopleRepository;
 use App\Models\People;
 
-class BuscarPeople
+class EditarPeople
 {
     public function __construct(private $repository = new PeopleRepository())
     {
@@ -13,6 +13,6 @@ class BuscarPeople
 
     public function execute(int $id): ?People
     {
-        return $this->repository->buscar($id);
+        return $this->repository->editar($id);
     }
 }

@@ -25,39 +25,37 @@
         }
     </style>
 
-    <form action="/people/{{$people->id}}" method="post">
+    <form action="/people/success" method="post">
 
         @csrf
 
-        @method('put')
-
-        <a href="/">Home Page</a>
+        <a href="/people">Home Page</a>
 
         <div class="container">
 
-            <h1>EDITAR CRUD</h1>
+            <h1>CREAR CRUD</h1>
 
             <div>
                 <label for="name">Nombre</label>
-                <input type="text" id="name" name="name" value="{{$people->name}}">
+                <input type="text" id="name" name="name">
             </div>
 
             <div>
                 <label for="surname">Apellido</label>
-                <input type="text" id="surname" name="surname" value="{{$people->surname}}">
+                <input type="text" id="surname" name="surname">
             </div>
 
             <div>
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{$people->email}}">
+                <input type="email" id="email" name="email">
             </div>
 
             <div>
                 <label for="description">Descripcion</label>
-                <input type="text" id="description" name="description" value="{{$people->description}}">
+                <input type="text" id="description" name="description">
             </div>
 
-            <input class="button" type="submit" name="enviar" id="enviar" value="Actualizar">
+            <input class="button" type="submit" name="enviar" id="enviar" value="Enviar">
 
         </div>
     </form>
