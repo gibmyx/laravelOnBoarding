@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  mariadb:
+    image: mariadb:10.8.3-jammy
+    container_name: laravelonboardin_app_mariadb
+    restart: always
+    environment:
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+    ports:
+      - '33067:3306'
+    networks:
+      - laravelonboardin_app_network
+    volumes:
+      - laravelonboardin_app_mariadb-data:/var/lib/mysql
+      - laravelonboardin_app_mariadb-config:/etc/mysql
+
+networks:
+  laravelonboardin_app_network:
+
+volumes:
+  laravelonboardin_app_mariadb-data:
+  laravelonboardin_app_mariadb-config:
