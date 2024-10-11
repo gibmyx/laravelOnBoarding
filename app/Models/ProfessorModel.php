@@ -11,5 +11,15 @@ class ProfessorModel extends Model
 
     protected $table = 'professors';
 
-    protected $fillable = ['name', 'lastname', 'cedula', 'age', 'gender', 'u_degrees', 'a_subjects', 'hours_a'];
+    protected $fillable = [
+        'id',
+        'name',
+        'lastname',
+        'cedula',
+        'age',
+        'gender',
+        'u_degrees',
+        'a_subjects',
+        'hours_a'
+    ];
 }

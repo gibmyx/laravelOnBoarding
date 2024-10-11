@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('lastname');
-            $table->string('cedula');
-            $table->string('age');
+            $table->integer('cedula');
+            $table->integer('age');
             $table->string('gender');
             $table->string('grade');
-            $table->string('n_subjects');
-            $table->string('notes');
+            $table->integer('n_subjects');
+            $table->float('notes');
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Student;
 
-use App\Repository\StudentRepository;
+use App\Exceptions\StudentNotFoundException;
 use App\Models\StudentModel;
 use App\Interfaces\StudentRepositoryInterface;
 
@@ -15,8 +15,14 @@ class BuscarStudent
         $this->repository = $repository;
     }
 
-    public function execute(int $id): StudentModel
+    public function execute(int $id): ?StudentModel
     {
-        return $this->repository->buscar($id);
+        $student = $this->repository->buscar($id);
+
+        if (is_null($student)) {
+            throw new StudentNotFoundException($id);
+        }
+
+        return $student;
     }
 }

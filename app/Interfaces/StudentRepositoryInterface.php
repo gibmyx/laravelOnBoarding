@@ -11,9 +11,9 @@ interface StudentRepositoryInterface
 
     public function crear(array $data): StudentModel;
 
-    public function buscar(int $id): StudentModel;
+    public function buscar(int $id): ?StudentModel;
 
-    public function editar(int $id, array $data): StudentModel;
+    public function editar(StudentModel $student, array $data): ?StudentModel;
 
-    public function eliminar(int $id): void;
+    public function eliminar(StudentModel $student): void;
 }

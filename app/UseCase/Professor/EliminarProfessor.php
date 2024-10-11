@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Professor;
 
-use App\Repository\ProfessorRepository;
+use App\Exceptions\ProfessorNotFoundException;
 use App\Models\ProfessorModel;
 use App\Interfaces\ProfessorRepositoryInterface;
 
@@ -17,6 +17,12 @@ class EliminarProfessor
 
     public function execute(int $id): void
     {
-        $this->repository->eliminar($id);
+        $professor = $this->repository->buscar($id);
+
+        if (is_null($professor)) {
+            throw new ProfessorNotFoundException($id);
+        }
+
+        $this->repository->eliminar($professor);
     }
 }

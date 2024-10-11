@@ -13,12 +13,5 @@ class HomeController extends Controller
     {
         return view('home');
     }
-
-    public function all(): View
-    {
-        $students = StudentModel::all();
-        $professors = ProfessorModel::all();
-        return view('all', compact('students', 'professors'));
-    }
 }
 

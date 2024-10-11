@@ -2,10 +2,10 @@
 
 namespace App\UseCase\Professor;
 
-use App\Repository\ProfessorRepository;
 use App\Models\ProfessorModel;
 use App\Interfaces\ProfessorRepositoryInterface;
 use App\DTO\ProfessorDTO;
+use App\Exceptions\ProfessorNotFoundException;
 
 class EditarProfessor
 {
@@ -16,8 +16,14 @@ class EditarProfessor
         $this->repository = $repository;
     }
 
-    public function execute(int $id, ProfessorDTO $dto): ProfessorModel
+    public function execute(int $id, ProfessorDTO $dto): ?ProfessorModel
     {
-        return $this->repository->editar($id, $dto->toArray());
+        $professor = $this->repository->buscar($id);
+
+        if (is_null($professor)) {
+            throw new ProfessorNotFoundException($id);
+        }
+
+        return $this->repository->editar($professor, $dto->toArray());
     }
 }
