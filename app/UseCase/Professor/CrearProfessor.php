@@ -2,7 +2,6 @@
 
 namespace App\UseCase\Professor;
 
-use App\Repository\ProfessorRepository;
 use App\Models\ProfessorModel;
 use App\Interfaces\ProfessorRepositoryInterface;
 use App\DTO\ProfessorDTO;

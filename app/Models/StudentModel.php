@@ -11,5 +11,15 @@ class StudentModel extends Model
 
     protected $table = 'students';
 
-    protected $fillable = ['name', 'lastname', 'cedula', 'age', 'gender', 'grade', 'n_subjects', 'notes'];
+    protected $fillable = [
+        'id',
+        'name',
+        'lastname',
+        'cedula',
+        'age',
+        'gender',
+        'grade',
+        'n_subjects',
+        'notes'
+    ];
 }

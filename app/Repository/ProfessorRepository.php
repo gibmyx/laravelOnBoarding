@@ -18,20 +18,19 @@ class ProfessorRepository implements ProfessorRepositoryInterface
         return ProfessorModel::create($data);
     }
 
-    public function buscar(int $id): ProfessorModel
+    public function buscar(int $id): ?ProfessorModel
     {
         return ProfessorModel::find($id);
     }
 
-    public function editar(int $id, array $data): ProfessorModel
+    public function editar(ProfessorModel $professor, array $data): ?ProfessorModel
     {
-        $professor = ProfessorModel::find($id);
         $professor->update($data);
         return $professor;
     }
 
-    public function eliminar(int $id): void
+    public function eliminar(ProfessorModel $professor): void
     {
-        ProfessorModel::destroy($id);
+        ProfessorModel::destroy($professor);
     }
 }

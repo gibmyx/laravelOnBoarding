@@ -5,6 +5,7 @@ namespace App\DTO;
 class ProfessorDTO extends PersonaDTO
 {
     public function __construct(
+        int $id,
         string $name,
         string $lastname,
         string $cedula,
@@ -15,7 +16,7 @@ class ProfessorDTO extends PersonaDTO
         public int $hours_a
     )
     {
-        parent::__construct($name, $lastname, $cedula, $age, $gender);
+        parent::__construct($id, $name, $lastname, $cedula, $age, $gender);
     }
 
     public function toArray(): array
@@ -30,6 +31,7 @@ class ProfessorDTO extends PersonaDTO
     public static function fromArray(array $data): self
     {
         return new self(
+            $data['id'],
             $data['name'],
             $data['lastname'],
             $data['cedula'],

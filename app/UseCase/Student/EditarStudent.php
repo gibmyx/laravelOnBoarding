@@ -2,10 +2,10 @@
 
 namespace App\UseCase\Student;
 
-use App\Repository\StudentRepository;
 use App\Models\StudentModel;
 use App\Interfaces\StudentRepositoryInterface;
 use App\DTO\StudentDTO;
+use App\Exceptions\StudentNotFoundException;
 
 class EditarStudent
 {
@@ -16,8 +16,14 @@ class EditarStudent
         $this->repository = $repository;
     }
 
-    public function execute(int $id, StudentDTO $dto): StudentModel
+    public function execute(int $id, StudentDTO $dto): ?StudentModel
     {
-        return $this->repository->editar($id, $dto->toArray());
+        $student = $this->repository->buscar($id);
+
+        if (is_null($student)) {
+            throw new StudentNotFoundException($id);
+        }
+
+        return $this->repository->editar($student, $dto->toArray());
     }
 }

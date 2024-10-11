@@ -24,8 +24,6 @@ Route::put('/people/{people}', [PeopleController::class, 'update']);
 //Rutas para la entidad Home
 Route::get('/', HomeController::class);
 
-Route::get('/all/listar', [HomeController::class, 'all']);
-
 //Rutas para la entidad Student
 Route::get('/student/crear', [StudentController::class, 'create']);
 
@@ -51,3 +49,8 @@ Route::get('/professor/{professor}/eliminar', [ProfessorController::class, 'elim
 Route::get('/professor/{professor}/editar', [ProfessorController::class, 'editar']);
 
 Route::put('/professor/{professor}', [ProfessorController::class, 'update']);
+
+// VUE
+Route::get('/vue', function(){
+    return view('home');
+});

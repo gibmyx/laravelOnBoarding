@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\StudentModel;
 use App\UseCase\Student\CrearStudent;
 use App\UseCase\Student\MostrarStudent;
 use App\UseCase\Student\EditarStudent;
@@ -16,7 +14,7 @@ use App\Repository\StudentRepository;
 class StudentController extends Controller
 {
     private StudentRepository $repository;
- 
+
     public function __construct()
     {
         $this->repository = (new StudentRepository());

@@ -2,8 +2,6 @@
 
 namespace App\UseCase\Professor;
 
-use App\Repository\ProfessorRepository;
-use App\Models\ProfessorModel;
 use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\ProfessorRepositoryInterface;
 

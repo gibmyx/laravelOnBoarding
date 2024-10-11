@@ -2,7 +2,6 @@
 
 namespace App\UseCase\Student;
 
-use App\Repository\StudentRepository;
 use App\Models\StudentModel;
 use App\DTO\StudentDTO;
 use App\Interfaces\StudentRepositoryInterface;

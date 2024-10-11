@@ -5,9 +5,10 @@ namespace App\DTO;
 abstract class PersonaDTO
 {
     public function __construct(
+        public int $id,
         public string $name,
         public string $lastname,
-        public string $cedula,
+        public int $cedula,
         public int $age,
         public string $gender
     ) {}
@@ -15,6 +16,7 @@ abstract class PersonaDTO
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'lastname' => $this->lastname,
             'cedula' => $this->cedula,

@@ -11,9 +11,9 @@ interface ProfessorRepositoryInterface
 
     public function crear(array $data): ProfessorModel;
 
-    public function buscar(int $id): ProfessorModel;
+    public function buscar(int $id): ?ProfessorModel;
 
-    public function editar(int $id, array $data): ProfessorModel;
+    public function editar(ProfessorModel $professor, array $data): ?ProfessorModel;
 
-    public function eliminar(int $id): void;
+    public function eliminar(ProfessorModel $professor): void;
 }

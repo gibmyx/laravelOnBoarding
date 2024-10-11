@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Professor;
 
-use App\Repository\ProfessorRepository;
+use App\Exceptions\ProfessorNotFoundException;
 use App\Models\ProfessorModel;
 use App\Interfaces\ProfessorRepositoryInterface;
 
@@ -15,8 +15,14 @@ class BuscarProfessor
         $this->repository = $repository;
     }
 
-    public function execute(int $id): ProfessorModel
+    public function execute(int $id): ?ProfessorModel
     {
-        return $this->repository->buscar($id);
+        $professor = $this->repository->buscar($id);
+
+        if (is_null($professor)) {
+            throw new ProfessorNotFoundException($id);
+        }
+
+        return $professor;
     }
 }

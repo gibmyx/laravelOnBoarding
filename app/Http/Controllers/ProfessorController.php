@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\ProfessorModel;
 use App\UseCase\Professor\CrearProfessor;
 use App\UseCase\Professor\MostrarProfessor;
 use App\UseCase\Professor\EditarProfessor;
@@ -11,7 +9,6 @@ use App\UseCase\Professor\EliminarProfessor;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Repository\ProfessorRepository;
-use App\Interfaces\ProfessorRepositoryInterface;
 use App\DTO\ProfessorDTO;
 
 class ProfessorController extends Controller
@@ -30,6 +27,7 @@ class ProfessorController extends Controller
 
     public function success(): View
     {
+
         $useCase = new CrearProfessor($this->repository);
         $data = request()->all();
         $dto = ProfessorDTO::fromArray($data);
@@ -66,5 +64,5 @@ class ProfessorController extends Controller
         $useCase->execute($id);
         return redirect('professor/listar');
     }
-    
+
 }

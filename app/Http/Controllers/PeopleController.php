@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\People;
 use App\UseCase\People\CrearPeople;
-use App\UseCase\People\BuscarPeople;
 use App\UseCase\People\MostrarPeople;
 use App\UseCase\People\EditarPeople;
 use App\UseCase\People\EliminarPeople;
