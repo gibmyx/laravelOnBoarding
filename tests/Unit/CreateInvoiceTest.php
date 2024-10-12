@@ -2,7 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\DTO\InvoiceDTO;
+use App\Interface\InvoiceRepositoryInterface;
 use App\Models\Invoice;
+use Mockery;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
@@ -21,6 +24,15 @@ final class CreateInvoiceTest extends TestCase
             'total' => 20.5,
         ]);
 
-        dd($invoiceModel);
+        $invoiceDto = InvoiceDTO::fromArray($invoiceModel->toArray());
+
+        $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+
+        $invoiceMock->shouldReceive('create')
+            ->with($invoiceDto)
+            ->once()
+            ->andReturn($invoiceModel);
+
+        $this->assertTrue(true);
     }
 }

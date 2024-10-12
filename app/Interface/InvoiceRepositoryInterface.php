@@ -6,7 +6,7 @@ use App\Entity\Invoice;
 
 interface InvoiceRepositoryInterface
 {
-    public function save(Invoice $invoice): void;
+    public function save(Invoice $invoice): Invoice;
 
     public function update(string $id, Invoice $invoice): void;
 }
