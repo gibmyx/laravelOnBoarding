@@ -2,12 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\DTO\InvoiceDTO;
-use App\Interface\InvoiceRepositoryInterface;
 use App\Models\Invoice;
-use App\UseCase\Invoice\CreateInvoice;
-use Mockery;
-use Mockery\Mock;
 use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
