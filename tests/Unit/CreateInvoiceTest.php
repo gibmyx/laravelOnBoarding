@@ -3,11 +3,13 @@
 namespace Tests\Unit;
 
 use App\DTO\InvoiceDTO;
+use App\Entity\Invoice as EntityInvoice;
 use App\Interface\InvoiceRepositoryInterface;
 use App\Models\Invoice;
+use App\UseCase\Invoice\CreateInvoice;
 use Mockery;
+use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
-use Tests\TestCase;
 
 final class CreateInvoiceTest extends TestCase
 {
@@ -26,13 +28,40 @@ final class CreateInvoiceTest extends TestCase
 
         $invoiceDto = InvoiceDTO::fromArray($invoiceModel->toArray());
 
-        $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+        $invoice = new EntityInvoice(
+            $invoiceDto->id,
+            $invoiceDto->code,
+            $invoiceDto->status,
+            $invoiceDto->provider_id,
+            $invoiceDto->subtotal,
+            $invoiceDto->tax,
+            $invoiceDto->discount,
+            $invoiceDto->total
+        );
+        
+        /** @var MockeryInterface $invoiceMock*/
 
-        $invoiceMock->shouldReceive('create')
-            ->with($invoiceDto)
-            ->once()
-            ->andReturn($invoiceModel);
+         $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+
+
+         $invoiceMock
+         ->shouldReceive('save')
+         ->with($this->similarTo($invoice))
+         ->once()
+         ->andReturn($invoice);
+
+        
+        $createInvoice = new CreateInvoice($invoiceMock);
+
+        $createInvoice->execute($invoiceDto);
 
         $this->assertTrue(true);
     }
+
+    private function similarTo($expected){        
+        return Mockery::on(function ($actual) use ($expected){            
+            return $actual == $expected;
+        });    
+    }
+    
 }

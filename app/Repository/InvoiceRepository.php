@@ -10,6 +10,7 @@ final class InvoiceRepository implements InvoiceRepositoryInterface
 {
     public function save(Invoice $invoice): Invoice
     {
+
         $invoiceData = [
             'id' => $invoice->id(),
             'code' => $invoice->code(),
