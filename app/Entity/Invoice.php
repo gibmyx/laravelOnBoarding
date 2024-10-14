@@ -11,7 +11,8 @@ final class Invoice
         public float $subtotal,
         public float $tax,
         public float $discount,
-        public float $total
+        public float $total,
+        public array $items
     ) {}
 
     public function id(): string
@@ -54,6 +55,11 @@ final class Invoice
         return $this->total;
     }
 
+    public function items(): array
+    {
+        return $this->items;
+    }
+
     public static function create(
         string $id,
         string $code,
@@ -62,7 +68,8 @@ final class Invoice
         float $subtotal,
         float $tax,
         float $discount,
-        float $total
+        float $total,
+        array $items
     ): self
     {
         return new self(
@@ -73,7 +80,8 @@ final class Invoice
             $subtotal,
             $tax,
             $discount,
-            $total
+            $total,
+            $items
         );
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice as EntityInvoice;
+use App\Exceptions\EmptyInvoiceItemsException;
 use App\Interface\InvoiceRepositoryInterface;
 use App\Models\Invoice;
 use App\UseCase\Invoice\CreateInvoice;
@@ -15,8 +16,11 @@ final class CreateInvoiceTest extends TestCase
 {
     public function test_create_invoice_without_items(): void
     {
+        $this->expectException(EmptyInvoiceItemsException::class);
+        $id = Uuid::uuid4()->toString();
+        
         $invoiceModel = new Invoice([
-            'id' => Uuid::uuid4()->toString(),
+            'id' => $id,
             'code' => 'INV-1',
             'status' => 'pending',
             'provider_id' => '1',
@@ -26,8 +30,12 @@ final class CreateInvoiceTest extends TestCase
             'total' => 20.5,
         ]);
 
-        $invoiceDto = InvoiceDTO::fromArray($invoiceModel->toArray());
+        $items = [];
 
+    
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+
+        
         $invoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
@@ -36,7 +44,8 @@ final class CreateInvoiceTest extends TestCase
             $invoiceDto->subtotal,
             $invoiceDto->tax,
             $invoiceDto->discount,
-            $invoiceDto->total
+            $invoiceDto->total,
+            $invoiceDto->items
         );
         
         /** @var MockeryInterface $invoiceMock*/
@@ -52,6 +61,7 @@ final class CreateInvoiceTest extends TestCase
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
+
 
         $createInvoice->execute($invoiceDto);
 

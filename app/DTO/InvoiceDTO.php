@@ -12,7 +12,8 @@ final class InvoiceDTO
         public float $subtotal,
         public float $tax,
         public float $discount,
-        public float $total
+        public float $total,
+        public array $items
     ) {}
 
     public static function fromArray(array $data): InvoiceDTO
@@ -25,7 +26,8 @@ final class InvoiceDTO
             $data['subtotal'],
             $data['tax'],
             $data['discount'],
-            $data['total']
+            $data['total'],
+            $data['items']
         );
     }
 
@@ -40,6 +42,7 @@ final class InvoiceDTO
             'tax' => $this->tax,
             'discount' => $this->discount,
             'total' => $this->total,
+            'items' => $this->items
         ];
     }
 }
