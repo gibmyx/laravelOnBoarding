@@ -26,8 +26,10 @@ final class CreateInvoice
         }
 
         foreach ($invoiceDto->items as $item) {
-            if($item['tax'] != ($item['subtotal'] * 7) / 100) {
-                throw new InvalidInvoiceItemTaxException($item['id']);
+            if ($item['tax'] != 0) {
+                if($item['tax'] != ($item['subtotal'] * 7) / 100) {
+                    throw new InvalidInvoiceItemTaxException($item['id']);
+                }
             }
         }
 
