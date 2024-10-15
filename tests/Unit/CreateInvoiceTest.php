@@ -61,7 +61,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn();
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
