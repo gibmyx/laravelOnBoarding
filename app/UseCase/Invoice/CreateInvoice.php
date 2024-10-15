@@ -10,6 +10,7 @@ use App\Exceptions\InvalidInvoiceItemSubtotalException;
 use App\Exceptions\InvalidInvoiceItemTaxException;
 use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
+use App\Exceptions\InvalidInvoiceTotalItemsException;
 use App\Interface\InvoiceRepositoryInterface;
 
 final class CreateInvoice
@@ -23,6 +24,7 @@ final class CreateInvoice
         $subtotalInvoiceItems = 0;
         $taxInvoiceItems = 0;
         $discountInvoiceItems = 0;
+        $totalInvoiceItems = 0;
 
         if (empty($invoiceDto->items) || !is_array($invoiceDto->items) || count($invoiceDto->items) === 0) {
             throw new EmptyInvoiceItemsException();
@@ -41,6 +43,7 @@ final class CreateInvoice
             $subtotalInvoiceItems += $item['subtotal'];
             $taxInvoiceItems += $item['tax'];
             $discountInvoiceItems += $item['discount'];
+            $totalInvoiceItems += $item['total'];
         }
 
         if ($subtotalInvoiceItems != $invoiceDto->subtotal) {
@@ -53,6 +56,10 @@ final class CreateInvoice
 
         if ($discountInvoiceItems != $invoiceDto->discount) {
             throw new InvalidInvoiceDiscountException($invoiceDto->id);
+        }
+
+        if ($totalInvoiceItems != $invoiceDto->total) {
+            throw new InvalidInvoiceTotalItemsException($invoiceDto->id);
         }
 
 
