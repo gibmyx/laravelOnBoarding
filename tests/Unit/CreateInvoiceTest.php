@@ -65,8 +65,6 @@ final class CreateInvoiceTest extends TestCase
 
 
         $createInvoice->execute($invoiceDto);
-
-        $this->assertTrue(true);
     }
 
     public function test_create_invoice_with_total_zero(): void
@@ -142,8 +140,6 @@ final class CreateInvoiceTest extends TestCase
 
 
         $createInvoice->execute($invoiceDto);
-
-        $this->assertTrue(true);
     }
 
     public function test_create_invoice_with_invalid_item_tax(): void
@@ -219,8 +215,6 @@ final class CreateInvoiceTest extends TestCase
 
 
         $createInvoice->execute($invoiceDto);
-
-        $this->assertTrue(true);
     }
 
     private function similarTo($expected){        
