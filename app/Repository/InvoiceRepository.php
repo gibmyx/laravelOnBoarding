@@ -8,7 +8,7 @@ use App\Models\Invoice as ModelsInvoice;
 
 final class InvoiceRepository implements InvoiceRepositoryInterface
 {
-    public function save(Invoice $invoice): Invoice
+    public function save(Invoice $invoice): void
     {
 
         $invoiceData = [
@@ -23,12 +23,10 @@ final class InvoiceRepository implements InvoiceRepositoryInterface
         ];
 
         ModelsInvoice::create($invoiceData);
-
-        return $invoice;
     }
 
-    public function update(string $id, Invoice $invoice): void
+    public function update(string $id, Invoice $invoice): Invoice
     {
-        // TODO: Implement update() method.
+       // return //;
     }
 }

@@ -12,7 +12,6 @@ use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
 use App\Exceptions\InvalidInvoiceTotalItemsException;
 use App\Interface\InvoiceRepositoryInterface;
-use App\Models\Invoice;
 use App\UseCase\Invoice\CreateInvoice;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -135,7 +134,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
@@ -208,7 +207,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
@@ -280,7 +279,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
@@ -353,7 +352,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
@@ -425,7 +424,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);
@@ -472,7 +471,7 @@ final class CreateInvoiceTest extends TestCase
             'subtotal' => 50.0,
             'tax' => 3.5,
             'discount' => 5.0,
-            'total' => 53.2,
+            'total' => 53.5,
         ], ['items' => $items]));
 
         
@@ -497,7 +496,7 @@ final class CreateInvoiceTest extends TestCase
          ->shouldReceive('save')
          ->with($this->similarTo($invoice))
          ->once()
-         ->andReturn($invoice);
+         ->andReturnNull();
 
         
         $createInvoice = new CreateInvoice($invoiceMock);

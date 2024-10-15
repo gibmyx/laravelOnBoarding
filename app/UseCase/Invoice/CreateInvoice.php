@@ -19,7 +19,7 @@ final class CreateInvoice
         private InvoiceRepositoryInterface $invoiceRepository
     ) {}
 
-    public function execute(InvoiceDTO $invoiceDto): Invoice
+    public function execute(InvoiceDTO $invoiceDto): void
     {
         $subtotalInvoiceItems = 0;
         $taxInvoiceItems = 0;
@@ -77,6 +77,6 @@ final class CreateInvoice
         );
 
 
-        return $this->invoiceRepository->save($invoice);   
+        $this->invoiceRepository->save($invoice);   
     }
 }
