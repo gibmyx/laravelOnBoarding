@@ -75,22 +75,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceTotalException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 20.5,
-            'tax' => 0,
-            'discount' => 0,
-            'total' => 0,
-        ]);
 
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10.5,
                 'amount' => 1.0,
@@ -101,7 +90,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10.0,
                 'amount' => 1.0,
@@ -113,7 +102,16 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 20.5,
+            'tax' => 0,
+            'discount' => 0,
+            'total' => 0,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
@@ -150,22 +148,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceItemTaxException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 0,
-            'total' => 53.5,
-        ]);
 
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10,
                 'amount' => 3,
@@ -176,19 +163,28 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $invoiceModel->id,
+                'factura_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
-                'subtotal' => 20.0, // precio_unitario * cantidad
-                'tax' => 1.4, // 7% de 20.0
+                'subtotal' => 20.0, 
+                'tax' => 1.4, 
                 'discount' => 0,
-                'total' => 21.4, // subtotal + impuesto - descuento
+                'total' => 21.4, 
             ],
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 0,
+            'total' => 53.5,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
@@ -224,22 +220,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceItemSubtotalException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 40.0,
-            'tax' => 3.5,
-            'discount' => 0,
-            'total' => 53.5,
-        ]);
 
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10,
                 'amount' => 3,
@@ -250,19 +235,28 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $invoiceModel->id,
+                'factura_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
-                'subtotal' => 20.0, // precio_unitario * cantidad
-                'tax' => 1.4, // 7% de 20.0
+                'subtotal' => 20.0, 
+                'tax' => 1.4, 
                 'discount' => 0,
-                'total' => 21.4, // subtotal + impuesto - descuento
+                'total' => 21.4, 
             ],
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 40.0,
+            'tax' => 3.5,
+            'discount' => 0,
+            'total' => 53.5,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
@@ -299,22 +293,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceTaxException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.0,
-            'discount' => 0,
-            'total' => 53.5,
-        ]);
-
+    
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10,
                 'amount' => 3,
@@ -325,19 +308,28 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $invoiceModel->id,
+                'factura_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
-                'subtotal' => 20.0, // precio_unitario * cantidad
-                'tax' => 1.4, // 7% de 20.0
+                'subtotal' => 20.0, 
+                'tax' => 1.4, 
                 'discount' => 0,
-                'total' => 21.4, // subtotal + impuesto - descuento
+                'total' => 21.4, 
             ],
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 40.0,
+            'tax' => 3.5,
+            'discount' => 0,
+            'total' => 53.5,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
@@ -373,22 +365,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceDiscountException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 3.0,
-            'total' => 53.5,
-        ]);
 
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10,
                 'amount' => 3,
@@ -399,19 +380,28 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $invoiceModel->id,
+                'factura_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
-                'subtotal' => 20.0, // precio_unitario * cantidad
-                'tax' => 1.4, // 7% de 20.0
+                'subtotal' => 20.0, 
+                'tax' => 1.4, 
                 'discount' => 3.0,
-                'total' => 21.4, // subtotal + impuesto - descuento
+                'total' => 21.4, 
             ],
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 3.0,
+            'total' => 53.5,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
@@ -447,22 +437,11 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceTotalItemsException::class);
         $id = Uuid::uuid4()->toString();
-        
-        $invoiceModel = new Invoice([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 5.0,
-            'total' => 53.5,
-        ]);
 
         $items = [
             [
                 'id' => '1',
-                'invoice_id' => $invoiceModel->id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 10,
                 'amount' => 3,
@@ -473,19 +452,28 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $invoiceModel->id,
+                'factura_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
-                'subtotal' => 20.0, // precio_unitario * cantidad
-                'tax' => 1.4, // 7% de 20.0
+                'subtotal' => 20.0, 
+                'tax' => 1.4, 
                 'discount' => 3.0,
-                'total' => 21.4, // subtotal + impuesto - descuento
+                'total' => 21.4, 
             ],
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 5.0,
+            'total' => 53.2,
+        ], ['items' => $items]));
 
         
         $invoice = new EntityInvoice(
