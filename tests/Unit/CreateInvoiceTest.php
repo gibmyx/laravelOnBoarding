@@ -24,11 +24,7 @@ final class CreateInvoiceTest extends TestCase
         $this->expectException(EmptyInvoiceItemsException::class);
         $id = Uuid::uuid4()->toString();
         
-
-        $items = [];
-
-    
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
+        $invoice = [
             'id' => $id,
             'code' => 'INV-1',
             'status' => 'pending',
@@ -37,10 +33,15 @@ final class CreateInvoiceTest extends TestCase
             'tax' => 0,
             'discount' => 0,
             'total' => 20.5,
-        ], ['items' => $items]));
+        ];
+
+        $items = [];
+
+    
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -59,7 +60,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -74,6 +75,17 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceTotalException::class);
         $id = Uuid::uuid4()->toString();
+
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 20.5,
+            'tax' => 0,
+            'discount' => 0,
+            'total' => 0,
+        ];
 
         $items = [
             [
@@ -101,19 +113,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 20.5,
-            'tax' => 0,
-            'discount' => 0,
-            'total' => 0,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -132,7 +135,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -147,6 +150,17 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceItemTaxException::class);
         $id = Uuid::uuid4()->toString();
+
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 0,
+            'total' => 53.5,
+        ];
 
         $items = [
             [
@@ -174,19 +188,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 0,
-            'total' => 53.5,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -205,7 +210,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -220,6 +225,17 @@ final class CreateInvoiceTest extends TestCase
         $this->expectException(InvalidInvoiceItemSubtotalException::class);
         $id = Uuid::uuid4()->toString();
 
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 40.0,
+            'tax' => 3.5,
+            'discount' => 0,
+            'total' => 53.5,
+        ];
+
         $items = [
             [
                 'id' => '1',
@@ -246,19 +262,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 40.0,
-            'tax' => 3.5,
-            'discount' => 0,
-            'total' => 53.5,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -277,7 +284,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -292,6 +299,17 @@ final class CreateInvoiceTest extends TestCase
     {
         $this->expectException(InvalidInvoiceTaxException::class);
         $id = Uuid::uuid4()->toString();
+
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.6,
+            'discount' => 0,
+            'total' => 53.5,
+        ];
     
         $items = [
             [
@@ -319,19 +337,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.6,
-            'discount' => 0,
-            'total' => 53.5,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -350,7 +359,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -365,6 +374,17 @@ final class CreateInvoiceTest extends TestCase
         $this->expectException(InvalidInvoiceDiscountException::class);
         $id = Uuid::uuid4()->toString();
 
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 3.0,
+            'total' => 53.5,
+        ];
+
         $items = [
             [
                 'id' => '1',
@@ -391,19 +411,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 3.0,
-            'total' => 53.5,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -422,7 +433,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
@@ -437,6 +448,17 @@ final class CreateInvoiceTest extends TestCase
         $this->expectException(InvalidInvoiceTotalItemsException::class);
         $id = Uuid::uuid4()->toString();
 
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 5.0,
+            'total' => 53.1,
+        ];
+
         $items = [
             [
                 'id' => '1',
@@ -463,19 +485,10 @@ final class CreateInvoiceTest extends TestCase
         ];
 
     
-        $invoiceDto = InvoiceDTO::fromArray(array_merge([
-            'id' => $id,
-            'code' => 'INV-1',
-            'status' => 'pending',
-            'provider_id' => '1',
-            'subtotal' => 50.0,
-            'tax' => 3.5,
-            'discount' => 5.0,
-            'total' => 53.1,
-        ], ['items' => $items]));
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
 
         
-        $invoice = new EntityInvoice(
+        $entityInvoice = new EntityInvoice(
             $invoiceDto->id,
             $invoiceDto->code,
             $invoiceDto->status,
@@ -494,7 +507,7 @@ final class CreateInvoiceTest extends TestCase
 
          $invoiceMock
          ->shouldReceive('save')
-         ->with($this->similarTo($invoice))
+         ->with($this->similarTo($entityInvoice))
          ->once()
          ->andReturnNull();
 
