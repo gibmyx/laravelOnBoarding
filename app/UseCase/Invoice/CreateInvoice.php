@@ -5,6 +5,8 @@ namespace App\UseCase\Invoice;
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice;
 use App\Exceptions\EmptyInvoiceItemsException;
+use App\Exceptions\InvalidInvoiceItemTaxException;
+use App\Exceptions\InvalidInvoiceTotalException;
 use App\Interface\InvoiceRepositoryInterface;
 
 final class CreateInvoice
@@ -17,6 +19,16 @@ final class CreateInvoice
     {
         if (empty($invoiceDto->items) || !is_array($invoiceDto->items) || count($invoiceDto->items) === 0) {
             throw new EmptyInvoiceItemsException();
+        }
+
+        if ($invoiceDto->total == 0) {
+            throw new InvalidInvoiceTotalException();
+        }
+
+        foreach ($invoiceDto->items as $item) {
+            if($item['tax'] != ($item['subtotal'] * 7) / 100) {
+                throw new InvalidInvoiceItemTaxException($item['id']);
+            }
         }
 
         $invoice = new Invoice(
