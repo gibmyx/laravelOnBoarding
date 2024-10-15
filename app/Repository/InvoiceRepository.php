@@ -25,7 +25,12 @@ final class InvoiceRepository implements InvoiceRepositoryInterface
         ModelsInvoice::create($invoiceData);
     }
 
-    public function update(string $id, Invoice $invoice): Invoice
+    public function search(string $id): ?Invoice
+    {
+        return null;
+    }
+
+    public function update(string $id, Invoice $invoice): void
     {
        // return //;
     }
