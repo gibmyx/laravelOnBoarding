@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Exceptions\EmptyInvoiceItemsException;
 use App\Exceptions\InvalidInvoiceItemSubtotalException;
 use App\Exceptions\InvalidInvoiceItemTaxException;
+use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
 use App\Interface\InvoiceRepositoryInterface;
 
@@ -19,6 +20,8 @@ final class CreateInvoice
     public function execute(InvoiceDTO $invoiceDto): Invoice
     {
         $subtotalInvoiceItems = 0;
+        $taxInvoiceItems = 0;
+
         if (empty($invoiceDto->items) || !is_array($invoiceDto->items) || count($invoiceDto->items) === 0) {
             throw new EmptyInvoiceItemsException();
         }
@@ -34,10 +37,15 @@ final class CreateInvoice
                 }
             }
             $subtotalInvoiceItems += $item['subtotal'];
+            $taxInvoiceItems += $item['tax'];
         }
 
         if ($subtotalInvoiceItems != $invoiceDto->subtotal) {
             throw new InvalidInvoiceItemSubtotalException($invoiceDto->id);
+        }
+
+        if ($taxInvoiceItems != $invoiceDto->tax) {
+            throw new InvalidInvoiceTaxException($invoiceDto->id);
         }
 
 
