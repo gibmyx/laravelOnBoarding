@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice as EntityInvoice;
 use App\Exceptions\EmptyInvoiceItemsException;
+use App\Exceptions\InvalidInvoiceDiscountException;
 use App\Exceptions\InvalidInvoiceItemSubtotalException;
 use App\Exceptions\InvalidInvoiceItemTaxException;
 use App\Exceptions\InvalidInvoiceTaxException;
@@ -330,6 +331,80 @@ final class CreateInvoiceTest extends TestCase
                 'subtotal' => 20.0, // precio_unitario * cantidad
                 'tax' => 1.4, // 7% de 20.0
                 'discount' => 0,
+                'total' => 21.4, // subtotal + impuesto - descuento
+            ],
+        ];
+
+    
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoiceModel->toArray(), ['items' => $items]));
+
+        
+        $invoice = new EntityInvoice(
+            $invoiceDto->id,
+            $invoiceDto->code,
+            $invoiceDto->status,
+            $invoiceDto->provider_id,
+            $invoiceDto->subtotal,
+            $invoiceDto->tax,
+            $invoiceDto->discount,
+            $invoiceDto->total,
+            $invoiceDto->items
+        );
+        
+        /** @var MockeryInterface $invoiceMock*/
+
+         $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+
+
+         $invoiceMock
+         ->shouldReceive('save')
+         ->with($this->similarTo($invoice))
+         ->once()
+         ->andReturn($invoice);
+
+        
+        $createInvoice = new CreateInvoice($invoiceMock);
+
+
+        $createInvoice->execute($invoiceDto);
+    }
+    public function test_create_invoice_with_invalid_discount(): void
+    {
+        $this->expectException(InvalidInvoiceDiscountException::class);
+        $id = Uuid::uuid4()->toString();
+        
+        $invoiceModel = new Invoice([
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,
+            'tax' => 3.5,
+            'discount' => 3.0,
+            'total' => 53.5,
+        ]);
+
+        $items = [
+            [
+                'id' => '1',
+                'invoice_id' => $invoiceModel->id,
+                'item_id' => Uuid::uuid4()->toString(),
+                'unit_price' => 10,
+                'amount' => 3,
+                'subtotal' => 30.0,
+                'tax' => 2.1,
+                'discount' => 2.0,
+                'total' => 32.1,
+            ],
+            [
+                'id' => '2',
+                'factura_id' => $invoiceModel->id,
+                'item_id' => Uuid::uuid4()->toString(),
+                'unit_price' => 20,
+                'amount' => 1,
+                'subtotal' => 20.0, // precio_unitario * cantidad
+                'tax' => 1.4, // 7% de 20.0
+                'discount' => 3.0,
                 'total' => 21.4, // subtotal + impuesto - descuento
             ],
         ];
