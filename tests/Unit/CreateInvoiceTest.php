@@ -325,8 +325,8 @@ final class CreateInvoiceTest extends TestCase
             'code' => 'INV-1',
             'status' => 'pending',
             'provider_id' => '1',
-            'subtotal' => 40.0,
-            'tax' => 3.5,
+            'subtotal' => 50.0,
+            'tax' => 3.6,
             'discount' => 0,
             'total' => 53.5,
         ], ['items' => $items]));
