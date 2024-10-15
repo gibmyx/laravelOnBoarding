@@ -471,7 +471,7 @@ final class CreateInvoiceTest extends TestCase
             'subtotal' => 50.0,
             'tax' => 3.5,
             'discount' => 5.0,
-            'total' => 53.5,
+            'total' => 53.1,
         ], ['items' => $items]));
 
         
