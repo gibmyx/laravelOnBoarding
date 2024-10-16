@@ -21,7 +21,7 @@ class invoiceEntity
         $this->invoice = $invoice;
         $this->items = $items;
 
-        if (!is_null($items) && is_null($invoice)) {
+        if (!is_null($items) && !is_null($invoice)) {
         $this->noItemsException();
         $this->TotalMountException();
         $this->SubtotalException();
