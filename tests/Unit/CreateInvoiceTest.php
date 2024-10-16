@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice as EntityInvoice;
+use App\Entity\InvoiceItem;
 use App\Exceptions\EmptyInvoiceItemsException;
 use App\Exceptions\InvalidInvoiceDiscountException;
 use App\Exceptions\InvalidInvoiceItemSubtotalException;
@@ -11,6 +12,7 @@ use App\Exceptions\InvalidInvoiceItemTaxException;
 use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
 use App\Exceptions\InvalidInvoiceTotalItemsException;
+use App\Interface\InvoiceItemRepositoryInterface;
 use App\Interface\InvoiceRepositoryInterface;
 use App\UseCase\Invoice\CreateInvoice;
 use Mockery;
@@ -19,6 +21,103 @@ use Ramsey\Uuid\Uuid;
 
 final class CreateInvoiceTest extends TestCase
 {
+
+    public function test_create_invoice(): void
+    {
+        $id = Uuid::uuid4()->toString();
+
+        $invoice = [
+            'id' => $id,
+            'code' => 'INV-1',
+            'status' => 'pending',
+            'provider_id' => '1',
+            'subtotal' => 50.0,  // suma de los subtotales de los items
+            'tax' => 3.5,        // suma de los impuestos de los items
+            'discount' => 5.0,   // suma de los descuentos de los items
+            'total' => 53.5,     // suma de los totales de los items
+        ];
+        
+        $items = [
+            [
+                'id' => '1',
+                'invoice_id' => $id,
+                'item_id' => Uuid::uuid4()->toString(),
+                'unit_price' => 10,
+                'amount' => 3,
+                'subtotal' => 30.0,
+                'tax' => 2.1,
+                'discount' => 2.0,
+                'total' => 32.1,
+            ],
+            [
+                'id' => '2',
+                'invoice_id' => $id,
+                'item_id' => Uuid::uuid4()->toString(),
+                'unit_price' => 20,
+                'amount' => 1,
+                'subtotal' => 20.0,
+                'tax' => 1.4,
+                'discount' => 3.0,
+                'total' => 21.4,
+            ],
+        ];
+
+        $invoiceDto = InvoiceDTO::fromArray(array_merge($invoice, ['items' => $items]));
+
+        
+        $entityInvoice = new EntityInvoice(
+            $invoiceDto->id,
+            $invoiceDto->code,
+            $invoiceDto->status,
+            $invoiceDto->provider_id,
+            $invoiceDto->subtotal,
+            $invoiceDto->tax,
+            $invoiceDto->discount,
+            $invoiceDto->total,
+            $invoiceDto->items
+        );
+
+
+        /** @var MockeryInterface $invoiceMock*/
+        $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+        $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+        foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
+
+
+         $invoiceMock
+         ->shouldReceive('save')
+         ->with($this->similarTo($entityInvoice))
+         ->once()
+         ->andReturnNull();
+
+         $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
+
+
+        $createInvoice->execute($invoiceDto);
+
+        $this->assertTrue(true);
+        
+    }
+
     public function test_create_invoice_without_items(): void
     {
         $this->expectException(EmptyInvoiceItemsException::class);
@@ -56,6 +155,7 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
 
 
          $invoiceMock
@@ -65,7 +165,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -95,8 +195,8 @@ final class CreateInvoiceTest extends TestCase
                 'unit_price' => 10.5,
                 'amount' => 1.0,
                 'subtotal' => 10.5,
-                'tax_item' => 0.0,
-                'discount' => 0.0,
+                'tax' => 2.0,
+                'discount' => 2.0,
                 'total' => 10.5,
             ],
             [
@@ -106,8 +206,8 @@ final class CreateInvoiceTest extends TestCase
                 'unit_price' => 10.0,
                 'amount' => 1.0,
                 'subtotal' => 10.0,
-                'tax' => 0.0,
-                'discount' => 0.0,
+                'tax' => 2.0,
+                'discount' => 2.0,
                 'total' => 10.0,
             ],
         ];
@@ -131,6 +231,27 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
 
          $invoiceMock
@@ -140,7 +261,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -176,7 +297,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
@@ -206,6 +327,28 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
+         
 
 
          $invoiceMock
@@ -215,7 +358,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -250,7 +393,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
@@ -280,6 +423,27 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
 
          $invoiceMock
@@ -289,7 +453,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -325,7 +489,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
@@ -355,6 +519,27 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
 
          $invoiceMock
@@ -364,7 +549,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -399,7 +584,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
@@ -429,16 +614,37 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
 
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
 
-         $invoiceMock
-         ->shouldReceive('save')
-         ->with($this->similarTo($entityInvoice))
-         ->once()
-         ->andReturnNull();
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $invoiceMock
+        ->shouldReceive('save')
+        ->with($this->similarTo($entityInvoice))
+        ->once()
+        ->andReturnNull();
+
+        
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);
@@ -473,7 +679,7 @@ final class CreateInvoiceTest extends TestCase
             ],
             [
                 'id' => '2',
-                'factura_id' => $id,
+                'invoice_id' => $id,
                 'item_id' => Uuid::uuid4()->toString(),
                 'unit_price' => 20,
                 'amount' => 1,
@@ -503,6 +709,27 @@ final class CreateInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
          $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+         $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
+
+         foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+                ->shouldReceive('save')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
 
          $invoiceMock
@@ -512,7 +739,7 @@ final class CreateInvoiceTest extends TestCase
          ->andReturnNull();
 
         
-        $createInvoice = new CreateInvoice($invoiceMock);
+        $createInvoice = new CreateInvoice($invoiceMock, $invoiceItemMock);
 
 
         $createInvoice->execute($invoiceDto);

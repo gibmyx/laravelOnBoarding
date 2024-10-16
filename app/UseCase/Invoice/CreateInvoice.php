@@ -4,6 +4,7 @@ namespace App\UseCase\Invoice;
 
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice;
+use App\Entity\InvoiceItem;
 use App\Exceptions\EmptyInvoiceItemsException;
 use App\Exceptions\InvalidInvoiceDiscountException;
 use App\Exceptions\InvalidInvoiceItemSubtotalException;
@@ -11,12 +12,14 @@ use App\Exceptions\InvalidInvoiceItemTaxException;
 use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
 use App\Exceptions\InvalidInvoiceTotalItemsException;
+use App\Interface\InvoiceItemRepositoryInterface;
 use App\Interface\InvoiceRepositoryInterface;
 
 final class CreateInvoice
 {
     public function __construct(
-        private InvoiceRepositoryInterface $invoiceRepository
+        private InvoiceRepositoryInterface $invoiceRepository,
+        private InvoiceItemRepositoryInterface $invoiceItemRepositoryInterface
     ) {}
 
     public function execute(InvoiceDTO $invoiceDto): void
@@ -40,10 +43,26 @@ final class CreateInvoice
                     throw new InvalidInvoiceItemTaxException($item['id']);
                 }
             }
+
             $subtotalInvoiceItems += $item['subtotal'];
             $taxInvoiceItems += $item['tax'];
             $discountInvoiceItems += $item['discount'];
             $totalInvoiceItems += $item['total'];
+
+            $item = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $this->invoiceItemRepositoryInterface->save($item);
+
         }
 
         if ($subtotalInvoiceItems != $invoiceDto->subtotal) {
