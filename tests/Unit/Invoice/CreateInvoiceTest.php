@@ -8,6 +8,7 @@ use App\Exceptions\InvalidTotalException;
 use App\DTO\InvoiceDTO;
 use App\DTO\ItemDTO;
 use App\Interface\InvoiceRepositoryInterface;
+use App\Interface\ItemRepositoryInterface;
 use App\UseCase\Invoice\CreateInvoice;
 use Mockery;
 use Tests\TestCase;
@@ -43,8 +44,24 @@ class CreateInvoiceTest extends TestCase
         $itemDTO1 = ItemDTO::fromArray($itemData);
         $itemDTO2 = ItemDTO::fromArray($itemData);
 
-        $mock = Mockery::mock(InvoiceRepositoryInterface::class);
-        $mock->shouldReceive('create')
+        $mockInvoice = Mockery::mock(InvoiceRepositoryInterface::class);
+        $mockItem = Mockery::mock(ItemRepositoryInterface::class);
+
+        $mockItem->shouldReceive('create')
+            ->with([
+                'id' => '1',
+                'factura_id' => '1',
+                'item_id' => '1',
+                'precio_unitario' => 10,
+                'cantidad' => 2,
+                'subtotal' => 20,
+                'impuesto' => 1.4,
+                'descuento' => 1,
+                'total' => 20.4,
+            ])
+            ->andReturn(null);
+
+        $mockInvoice->shouldReceive('create')
             ->with([
                 'id' => '1',
                 'codigo' => 'wqe12ew',
@@ -57,7 +74,7 @@ class CreateInvoiceTest extends TestCase
             ])
             ->andReturn(null);
 
-        $crearInvoice = new CreateInvoice($mock);
+        $crearInvoice = new CreateInvoice($mockInvoice, $mockItem);
         $crearInvoice->execute($invoiceDTO, [$itemDTO1, $itemDTO2]);
 
         $this->assertTrue(true);
@@ -78,12 +95,14 @@ class CreateInvoiceTest extends TestCase
             'total' => 0,
         ]);
 
-        $mock = Mockery::mock(InvoiceRepositoryInterface::class);
-        $mock->shouldReceive('create')
+        $mockInvoice = Mockery::mock(InvoiceRepositoryInterface::class);
+        $mockItem = Mockery::mock(ItemRepositoryInterface::class);
+
+        $mockInvoice->shouldReceive('create')
             ->with($invoiceDTO->toArray())
             ->andReturnNull();
 
-        $crearInvoice = new CreateInvoice($mock);
+        $crearInvoice = new CreateInvoice($mockInvoice, $mockItem);
 
         $crearInvoice->execute($invoiceDTO, []);
     }
@@ -115,12 +134,14 @@ class CreateInvoiceTest extends TestCase
             'total' => 0,
         ]);
 
-        $mock = Mockery::mock(InvoiceRepositoryInterface::class);
-        $mock->shouldReceive('create')
+        $mockInvoice = Mockery::mock(InvoiceRepositoryInterface::class);
+        $mockItem = Mockery::mock(ItemRepositoryInterface::class);
+
+        $mockInvoice->shouldReceive('create')
             ->with($invoiceDTO->toArray())
             ->andReturnNull();
 
-        $crearInvoice = new CreateInvoice($mock);
+        $crearInvoice = new CreateInvoice($mockInvoice, $mockItem);
         $crearInvoice->execute($invoiceDTO, [$itemDTO]);
     }
 }

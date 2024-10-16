@@ -5,16 +5,21 @@ namespace App\UseCase\Invoice;
 use App\Entities\Invoice;
 use App\DTO\InvoiceDTO;
 use App\Interface\InvoiceRepositoryInterface;
+use App\Interface\ItemRepositoryInterface;
 use App\Exceptions\EmptyItemsException;
 use App\Exceptions\InvalidTotalException;
 
 class CreateInvoice
 {
-    private $repository;
+    private $invoiceRepository;
+    private $itemRepository;
 
-    public function __construct(InvoiceRepositoryInterface $repository)
+    public function __construct(
+        InvoiceRepositoryInterface $invoiceRepository,
+        ItemRepositoryInterface $itemRepository)
     {
-        $this->repository = $repository;
+        $this->invoiceRepository = $invoiceRepository;
+        $this->itemRepository = $itemRepository;
     }
 
     public function execute(InvoiceDTO $invoiceDTO, array $items): void
@@ -23,7 +28,6 @@ class CreateInvoice
             throw new EmptyItemsException();
         }
 
-        $invoice = new Invoice($invoiceDTO);
         $subtotal = 0;
         $descuento = 0;
         $impuesto = 0;
@@ -43,7 +47,11 @@ class CreateInvoice
             throw new InvalidTotalException();
         }
 
-        $invoice->update(new InvoiceDTO(
+        foreach ($items as $item) {
+            $this->itemRepository->create($item->toArray());
+        }
+
+        $invoice = new Invoice(new InvoiceDTO(
             $invoiceDTO->getId(),
             $invoiceDTO->getCodigo(),
             $invoiceDTO->getEstado(),
@@ -54,6 +62,6 @@ class CreateInvoice
             $total
         ));
 
-        $this->repository->create($invoice->toDTO()->toArray());
+        $this->invoiceRepository->create($invoice->toDTO()->toArray());
     }
 }

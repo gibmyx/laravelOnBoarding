@@ -50,6 +50,7 @@ class UpdateInvoiceTest extends TestCase
 
         $mockInvoice = Mockery::mock(InvoiceRepositoryInterface::class);
         $mockItem = Mockery::mock(ItemRepositoryInterface::class);
+
         $mockInvoice->shouldReceive('search')
             ->with($invoiceDTO->getId())
             ->andReturn($invoiceEntity);
