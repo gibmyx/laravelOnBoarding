@@ -8,12 +8,8 @@ use App\Interface\InvoiceRepositoryInterface;
 
 class SearchInvoice
 {
-    private $repository;
-
-    public function __construct(InvoiceRepositoryInterface $repository)
-    {
-        $this->repository = $repository;
-    }
+    public function __construct(private InvoiceRepositoryInterface $repository)
+    {}
 
     public function execute(string $id): ?Invoice
     {

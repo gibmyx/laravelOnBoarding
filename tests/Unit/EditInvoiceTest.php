@@ -4,6 +4,8 @@ namespace Tests\Unit;
 
 use App\DTO\InvoiceDTO;
 use App\Entity\Invoice;
+use App\Entity\InvoiceItem;
+use App\Interface\InvoiceItemRepositoryInterface;
 use App\Interface\InvoiceRepositoryInterface;
 use App\UseCase\Invoice\EditInvoice;
 use App\UseCase\Invoice\SearchInvoice;
@@ -72,6 +74,7 @@ final class EditInvoiceTest extends TestCase
         /** @var MockeryInterface $invoiceMock*/
 
         $invoiceMock = Mockery::mock(InvoiceRepositoryInterface::class);
+        $invoiceItemMock = Mockery::mock(InvoiceItemRepositoryInterface::class);
 
         $invoiceMock
          ->shouldReceive('search')
@@ -83,6 +86,36 @@ final class EditInvoiceTest extends TestCase
 
         
         $invoiceSearchResult = $searchInvoice->execute($id);
+
+        foreach ($items as $item) {
+            $entityItem = new InvoiceItem(
+                $item['id'],
+                $item['invoice_id'],
+                $item['item_id'],
+                $item['unit_price'],
+                $item['amount'],
+                $item['subtotal'],
+                $item['tax'],
+                $item['discount'],
+                $item['total']
+            );
+
+            $invoiceItemMock
+            ->shouldReceive('search')
+            ->with($item['id'])
+            ->once()
+            ->andReturn($entityItem);
+
+            $searchInvoiceItem = new SearchInvoice($invoiceItemMock);
+
+            $searchInvoiceItem->execute($item['id']);
+
+            $invoiceItemMock
+                ->shouldReceive('update')
+                ->with($this->similarTo($entityItem))
+                ->once()
+                ->andReturnNull();
+        }
 
 
         $invoiceMock

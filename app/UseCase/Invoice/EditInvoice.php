@@ -14,6 +14,7 @@ use App\Exceptions\InvalidInvoiceItemTaxException;
 use App\Exceptions\InvalidInvoiceTaxException;
 use App\Exceptions\InvalidInvoiceTotalException;
 use App\Exceptions\InvalidInvoiceTotalItemsException;
+use App\Exceptions\InvoiceItemNotFound;
 use App\Exceptions\InvoiceNotFound;
 use App\Interface\InvoiceItemRepositoryInterface;
 use App\Interface\InvoiceRepositoryInterface;
@@ -22,7 +23,7 @@ class EditInvoice
 {
     public function __construct(
         private InvoiceRepositoryInterface $invoiceRepository,
-        private InvoiceItemRepositoryInterface $invoiceItemRepositoryInterface
+        private InvoiceItemRepositoryInterface $invoiceItemRepository
     ) {}
 
     public function execute(string $id, InvoiceDTO $invoiceDto): void
@@ -32,7 +33,8 @@ class EditInvoice
         $discountInvoiceItems = 0;
         $totalInvoiceItems = 0;
 
-        $invoice = $this->invoiceRepository->search($id);
+        $invoiceSearcher = new SearchInvoice($this->invoiceRepository);
+        $invoice = $invoiceSearcher->execute($id);
 
         if (is_null($invoice)) {
             throw new InvoiceNotFound($id);
@@ -47,6 +49,13 @@ class EditInvoice
         }
 
         foreach ($invoiceDto->items as $item) {
+
+            $itemSearch = $this->invoiceItemRepository->search($item->id);
+
+            if (is_null($itemSearch)) {
+                throw new InvoiceItemNotFound($item->id);
+            }
+
             if ($item['tax'] != 0) {
                 if($item['tax'] != ($item['subtotal'] * 7) / 100) {
                     throw new InvalidInvoiceItemTaxException($item['id']);
@@ -70,7 +79,7 @@ class EditInvoice
                 $item['total']
             );
 
-            $this->invoiceItemRepositoryInterface->save($item);
+            $this->invoiceItemRepository->update($item);
 
         }
 
