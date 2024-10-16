@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   mariadb:
     image: mariadb:10.8.3-jammy
@@ -10,7 +10,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
       MARIADB_DATABASE: ${DB_DATABASE}
     ports:
-      - '33068:3306'
+      - "33068:3306"
     networks:
       - laravelonboardin_app_network
     volumes:
