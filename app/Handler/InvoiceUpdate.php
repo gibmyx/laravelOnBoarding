@@ -20,6 +20,7 @@ final class InvoiceUpdate
 
     public function __invoke(InvoiceCommand $command): string
     {
+       
         if (empty($command->items())) {
             throw new \App\Exceptions\InvoiceItemsNoFoundException($command->codigo());
         }
@@ -29,6 +30,7 @@ final class InvoiceUpdate
         if ($invoice === null) {
             throw new \App\Exceptions\InvoiceNotFoundException($command->id());
         }
+
 
         $invoice->update(
             $command->codigo(),
@@ -40,9 +42,31 @@ final class InvoiceUpdate
             $command->total(),
         );
 
+        
+        $existingItems = $this->itemRepository->findByInvoiceId($command->id());
+
+        $differences = [];
+
+        foreach ($existingItems as $existingItem) {
+            $found = false;
+            foreach ($command->items() as $item) {
+                if ($existingItem->id() === $item->id()) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $differences[] = $existingItem; 
+            }
+        }
+
+        foreach ($differences as $difference) {
+            $this->itemRepository->delete($difference->id());
+        }
+
+
         foreach ($command->items() as $item) {
             $invoiceItem = $this->buildItem($item);
-
             $this->itemRepository->save($invoiceItem);
         }
 

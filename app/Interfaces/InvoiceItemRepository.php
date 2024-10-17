@@ -11,4 +11,8 @@ interface InvoiceItemRepository
 
     public function save(InvoiceItem $item): void;
 
+    public function findByInvoiceId(string $invoiceId): array;
+
+    public function delete(string $id): void;
+
 }

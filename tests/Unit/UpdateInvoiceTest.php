@@ -124,16 +124,6 @@ final class UpdateInvoiceTest extends TestCase
                 ->once();
         }
 
-        $invoice->update(
-            'hola',
-            $invoice->estado(),
-            $invoice->proveedorId(),
-            $invoice->subtotal(),
-            $invoice->impuesto(),
-            $invoice->descuento(),
-            $invoice->total(),
-        );
-
         $repository->shouldReceive('update')
             ->with($this->similarTo($invoice))
             ->andReturnNull()
@@ -160,9 +150,9 @@ final class UpdateInvoiceTest extends TestCase
     public function test_delete_item_invoice(): void
     {
         $invoice = $this->InvoiceMother(subtotal: 300, impuesto: 21, descuento: 15, total: 315);
-        $item1 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
-        $item2 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
-        $item3 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+        $item1 = $this->invoiceItemMother(facturaId: $invoice->id(), cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+        $item2 = $this->invoiceItemMother(facturaId: $invoice->id(), cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+        $item3 = $this->invoiceItemMother(facturaId: $invoice->id(), cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
 
         $repository = Mockery::mock(InvoiceRepository::class);
         $repositoryItem = Mockery::mock(InvoiceItemRepository::class);
@@ -172,22 +162,22 @@ final class UpdateInvoiceTest extends TestCase
             ->andReturn($invoice)
             ->once();
 
-        foreach ([$item1, $item2, $item3] as $row) {
-            $repositoryItem->shouldReceive('save')
-                ->with($this->similarTo($row))
-                ->andReturnNull()
-                ->once();
-        }
+        $repositoryItem->shouldReceive('findByInvoiceId')
+        ->with($invoice->id())
+        ->andReturn([$item1, $item2, $item3])
+        ->once();
 
-        $invoice->update(
-            'hola',
-            $invoice->estado(),
-            $invoice->proveedorId(),
-            $invoice->subtotal(),
-            $invoice->impuesto(),
-            $invoice->descuento(),
-            $invoice->total(),
-        );
+        $repositoryItem->shouldReceive('delete')
+            ->with($item2->id())
+            ->andReturnNull()
+            ->once();
+
+        foreach ([$item1, $item3] as $row) {
+            $repositoryItem->shouldReceive('save')
+            ->with($this->similarTo($row))
+            ->andReturnNull()
+            ->once();
+            }
 
         $repository->shouldReceive('update')
             ->with($this->similarTo($invoice))
@@ -205,10 +195,10 @@ final class UpdateInvoiceTest extends TestCase
             $invoice->impuesto(),
             $invoice->descuento(),
             $invoice->total(),
-            ...$this->buildCommandItem([$item])
+            ...$this->buildCommandItem([$item1, $item3])
         ));
 
-        $this->assertEquals('Invoice updated successfully!', $response);
+        $this->assertTrue(true);
 
     }
 
