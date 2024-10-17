@@ -157,6 +157,61 @@ final class UpdateInvoiceTest extends TestCase
 
     }
 
+    public function test_delete_item_invoice(): void
+    {
+        $invoice = $this->InvoiceMother(subtotal: 300, impuesto: 21, descuento: 15, total: 315);
+        $item1 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+        $item2 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+        $item3 = $this->invoiceItemMother(cantidad: 1, precioUnitario: 100, subtotal: 100, impuesto: 7, descuento: 5, total: 105);
+
+        $repository = Mockery::mock(InvoiceRepository::class);
+        $repositoryItem = Mockery::mock(InvoiceItemRepository::class);
+
+        $repository->shouldReceive('find')
+            ->with($invoice->id())
+            ->andReturn($invoice)
+            ->once();
+
+        foreach ([$item1, $item2, $item3] as $row) {
+            $repositoryItem->shouldReceive('save')
+                ->with($this->similarTo($row))
+                ->andReturnNull()
+                ->once();
+        }
+
+        $invoice->update(
+            'hola',
+            $invoice->estado(),
+            $invoice->proveedorId(),
+            $invoice->subtotal(),
+            $invoice->impuesto(),
+            $invoice->descuento(),
+            $invoice->total(),
+        );
+
+        $repository->shouldReceive('update')
+            ->with($this->similarTo($invoice))
+            ->andReturnNull()
+            ->once();
+
+        $invoiceUpdate = new \App\Handler\InvoiceUpdate($repository, $repositoryItem);
+
+        $response = ($invoiceUpdate)(new InvoiceCommand(
+            $invoice->id(),
+            $invoice->codigo(),
+            $invoice->estado(),
+            $invoice->proveedorId(),
+            $invoice->subtotal(),
+            $invoice->impuesto(),
+            $invoice->descuento(),
+            $invoice->total(),
+            ...$this->buildCommandItem([$item])
+        ));
+
+        $this->assertEquals('Invoice updated successfully!', $response);
+
+    }
+
     private function InvoiceMother(
         string $id = null,
         string $codigo = null,
