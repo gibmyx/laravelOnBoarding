@@ -177,7 +177,7 @@ final class UpdateInvoiceTest extends TestCase
             ->with($this->similarTo($row))
             ->andReturnNull()
             ->once();
-            }
+        }
 
         $repository->shouldReceive('update')
             ->with($this->similarTo($invoice))
@@ -198,7 +198,7 @@ final class UpdateInvoiceTest extends TestCase
             ...$this->buildCommandItem([$item1, $item3])
         ));
 
-        $this->assertTrue(true);
+        $this->assertEquals('Invoice updated successfully!', $response);
 
     }
 

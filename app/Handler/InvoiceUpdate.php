@@ -30,34 +30,26 @@ final class InvoiceUpdate
         if ($invoice === null) {
             throw new \App\Exceptions\InvoiceNotFoundException($command->id());
         }
-
-
-        $invoice->update(
-            $command->codigo(),
-            $command->estado(),
-            $command->proveedorId(),
-            $command->subtotal(),
-            $command->impuesto(),
-            $command->descuento(),
-            $command->total(),
-        );
-
         
         $existingItems = $this->itemRepository->findByInvoiceId($command->id());
+        $existingItemsCollection = collect($existingItems);
+        $commandItemsCollection = collect($command->items());
+        
+        $differences = $existingItemsCollection->diffUsing($commandItemsCollection, function ($existingItem, $commandItem) {
+            return $existingItem->id() === $commandItem->id() ? 0 : -1;
+        });
+        
 
-        $differences = [];
+        $newSubtotal = 0;
+        $newTax = 0;
+        $newDiscount = 0;
+        $newTotal = 0;
 
-        foreach ($existingItems as $existingItem) {
-            $found = false;
-            foreach ($command->items() as $item) {
-                if ($existingItem->id() === $item->id()) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
-                $differences[] = $existingItem; 
-            }
+        foreach ($differences as $difference) {
+            $newSubtotal += $difference->subtotal();
+            $newTax += $difference->impuesto();
+            $newDiscount += $difference->descuento();
+            $newTotal += $difference->total();
         }
 
         foreach ($differences as $difference) {
@@ -69,6 +61,16 @@ final class InvoiceUpdate
             $invoiceItem = $this->buildItem($item);
             $this->itemRepository->save($invoiceItem);
         }
+
+        $invoice->update(
+            $command->codigo(),
+            $command->estado(),
+            $command->proveedorId(),
+            $invoice->subtotal() - $newSubtotal,
+            $invoice->impuesto() - $newTax,
+            $invoice->descuento() - $newDiscount,
+            $invoice->total() - $newTotal,
+        );
 
         $this->repository->update($invoice);
 
